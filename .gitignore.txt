@@ -1,0 +1,21 @@
+# Arduino build artifacts
+*.hex
+*.elf
+*.bin
+build/
+
+# PlatformIO
+.pio/
+.piolibdeps/
+
+# Arduino IDE 2.x / VS Code
+.vscode/
+*.code-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 편집기 백업
+*~
+*.bak
