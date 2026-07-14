@@ -6,6 +6,7 @@ build/
 
 # PlatformIO
 .pio/
+.pioenvs/
 .piolibdeps/
 
 # Arduino IDE 2.x / VS Code
