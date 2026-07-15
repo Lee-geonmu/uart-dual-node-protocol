@@ -5,7 +5,7 @@ Arduino Nano ↔ Uno 2노드 사이에 자체 설계한 프레임 프로토콜(C
 
 ## 시연 영상
 
-▶ [시연 영상 보기](여기에_영상_링크_붙여넣기)
+▶ [시연 영상 보기]
 
 정상 통신 → 강제 단선(재전송·실패 판정) → 재연결 복구 → ACK 유실 시 중복 프레임 처리까지 실제 동작을 담았다.
 
@@ -23,12 +23,10 @@ uart-dual-node-protocol/
 │   └── nano_sender.ino     # 송신 노드: 가변저항 값 전송, 타임아웃·재전송 담당
 ├── uno_receiver/
 │   └── uno_receiver.ino    # 수신 노드: CRC 검증, ACK/NACK 회신, 중복 판별
-└── docs/
-    ├── circuit.png
-    ├── 01_normal_operation.png
-    ├── 02_error_retry.png
-    ├── 03_comm_restored.png
-    └── 04_duplicate_frame.png
+├── .gitattributes
+├── .gitignore.txt
+├── LICENSE
+└── README.md
 ```
 
 ## 하드웨어
@@ -54,7 +52,8 @@ uart-dual-node-protocol/
 - LED: 양쪽 보드 공통으로 D6(초록, 220Ω) = 통신 정상, D5(빨강, 220Ω) = 통신 실패
 - 하드웨어 UART(D0/D1)는 USB 시리얼 디버깅 전용으로 남기고, 노드 간 링크는 SoftwareSerial 9600bps 사용
 
-![회로도](docs/circuit.png)
+<img width="777" height="766" alt="image" src="https://github.com/user-attachments/assets/29cba293-126b-41fb-8e54-5735c9cf1791" />
+
 
 ## 프로토콜 설계
 
@@ -83,19 +82,23 @@ uart-dual-node-protocol/
 
 **정상 통신** — 가변저항을 돌리면 수신 값이 실시간 갱신된다.
 
-![정상 동작](docs/01_normal_operation.png)
+<img width="815" height="597" alt="스크린샷 2026-07-16 012800" src="https://github.com/user-attachments/assets/6258d227-c3f9-4025-b381-1d36c253f9e8" />
+
 
 **강제 단선** — TX 라인을 뽑으면 타임아웃 → 3회 재시도 → 실패 판정.
 
-![에러/재시도](docs/02_error_retry.png)
+<img width="822" height="622" alt="스크린샷 2026-07-16 012943" src="https://github.com/user-attachments/assets/74311a62-e45d-498f-b227-06d1ad9b6ee5" />
+
 
 **재연결 복구** — 선을 다시 꽂으면 자동 복구된다.
 
-![복구](docs/03_comm_restored.png)
+<img width="823" height="643" alt="스크린샷 2026-07-16 013200" src="https://github.com/user-attachments/assets/b1e11fbf-4c07-4020-ad83-ef476cea34cc" />
+
 
 **중복 프레임 처리** — ACK 유실 시 재전송된 프레임을 SEQ로 걸러낸다.
 
-![중복 처리](docs/04_duplicate_frame.png)
+<img width="827" height="648" alt="스크린샷 2026-07-16 013444" src="https://github.com/user-attachments/assets/9002cb80-904f-402e-be3f-4d975237e8f8" />
+
 
 > 중복 처리 상황은 자연 발생 빈도가 낮아 `DEBUG_FORCE_ACK_LOSS` 플래그로 특정 SEQ에서 ACK를 한 번 생략하도록 만들어 재현했다.
 > 촬영 시에만 `true`로 켰고, 저장소의 코드는 `false`로 꺼진 상태다.
@@ -162,9 +165,6 @@ XOR / CRC-8 각각이 오류를 놓치는 비율(miss rate)을 측정. 케이스
 - ACK 대기(`waitForResponse`)가 blocking 방식이라 대기 중 다른 작업이 불가능하다. RTOS 태스크 구조에서 개선 예정
 - SEQ가 1바이트 단일 값 비교라 이론상 256프레임 주기로 오판 가능성이 있다 (현 규모에서는 무시 가능한 수준)
 - SoftwareSerial 자체의 타이밍 한계 — 실험 1에서 확인한 측정 변동성의 근본 원인 중 하나로 추정
-
-다음 단계: STM32(NUCLEO-F411RE) 하드웨어 UART로 동일 프로토콜을 레지스터 레벨에서 재구현하고, FreeRTOS → CAN으로 확장할 계획이다.
-CAN은 CRC·재전송·중재가 하드웨어에 내장되어 있어, 이번에 소프트웨어로 직접 구현한 것과의 비교가 목표다.
 
 ## License
 
