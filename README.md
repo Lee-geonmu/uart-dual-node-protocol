@@ -82,22 +82,34 @@ uart-dual-node-protocol/
 
 **정상 통신** — 가변저항을 돌리면 수신 값이 실시간 갱신된다.
 
+
 <img width="815" height="597" alt="스크린샷 2026-07-16 012800" src="https://github.com/user-attachments/assets/6258d227-c3f9-4025-b381-1d36c253f9e8" />
+
+
 
 
 **강제 단선** — TX 라인을 뽑으면 타임아웃 → 3회 재시도 → 실패 판정.
 
+
 <img width="822" height="622" alt="스크린샷 2026-07-16 012943" src="https://github.com/user-attachments/assets/74311a62-e45d-498f-b227-06d1ad9b6ee5" />
+
+
 
 
 **재연결 복구** — 선을 다시 꽂으면 자동 복구된다.
 
+
 <img width="823" height="643" alt="스크린샷 2026-07-16 013200" src="https://github.com/user-attachments/assets/b1e11fbf-4c07-4020-ad83-ef476cea34cc" />
+
+
 
 
 **중복 프레임 처리** — ACK 유실 시 재전송된 프레임을 SEQ로 걸러낸다.
 
+
 <img width="827" height="648" alt="스크린샷 2026-07-16 013444" src="https://github.com/user-attachments/assets/9002cb80-904f-402e-be3f-4d975237e8f8" />
+
+
 
 
 > 중복 처리 상황은 자연 발생 빈도가 낮아 `DEBUG_FORCE_ACK_LOSS` 플래그로 특정 SEQ에서 ACK를 한 번 생략하도록 만들어 재현했다.
